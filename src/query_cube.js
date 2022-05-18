@@ -70,11 +70,18 @@ function createPipeline(ppl, tuples) {
       // for counts, just project the top-level "count" field
       measProject[f] = "$count";
     } else if (a === "avg") {
-      // for averages, we need the sum and count instead
+      // for averages, we need the sum and count of the field instead
       measGroup[`${m}_sum`] = { $sum: `$${m}.sum` };
-      measGroup.count = { $sum: `$count` };
+      measGroup[`${m}_count`] = { $sum: `$${m}.count` };
       // then we need a separate $set stage to calculate the new average
-      measSet[`${m}_avg`] = { $divide: [`$${m}_sum`, `$count`] };
+      // and if the count is 0, we set the field to null.
+      measSet[`${m}_avg`] = {
+        $cond: {
+          if: { $eq: [`$${m}_count`, 0] },
+          then: null,
+          else: { $divide: [`$${m}_sum`, `$${m}_count`] },
+        },
+      };
     } else {
       // in all other cases, we can apply the operator on the pre-aggregated values
       // e.g.  sum(a, b, c, d) = sum(sum(a, b), sum(c, d))

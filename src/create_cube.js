@@ -15,13 +15,15 @@ function createCube(dimensions, measures, outCollection) {
     const sumField = `${measure}_sum`;
     const minField = `${measure}_min`;
     const maxField = `${measure}_max`;
-    const avgField = `${measure}_avg`;
+    const countField = `${measure}_count`;
 
     return {
       [sumField]: { $sum: `$${measure}` },
       [minField]: { $min: `$${measure}` },
       [maxField]: { $max: `$${measure}` },
-      [avgField]: { $avg: `$${measure}` },
+      [countField]: {
+        $sum: { $cond: { if: `$${measure}`, then: 1, else: 0 } },
+      },
     };
   };
 
@@ -34,14 +36,14 @@ function createCube(dimensions, measures, outCollection) {
     const sumField = `$${measure}_sum`;
     const minField = `$${measure}_min`;
     const maxField = `$${measure}_max`;
-    const avgField = `$${measure}_avg`;
+    const countField = `$${measure}_count`;
 
     return {
       [measure]: {
         sum: sumField,
         min: minField,
         max: maxField,
-        avg: avgField,
+        count: countField,
       },
     };
   };
