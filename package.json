@@ -1,0 +1,18 @@
+{
+  "name": "cubes",
+  "version": "0.1.0",
+  "description": "OLAP Cubing for MongoDB",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "mocha -r esm ./src/**/*.test.js --watch"
+  },
+  "author": "Thomas Rueckstiess",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1"
+  }
+}
