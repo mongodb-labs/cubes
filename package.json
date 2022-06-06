@@ -4,6 +4,11 @@
   "description": "Basic OLAP Cubing for the MongoDB Aggregation Framework",
   "main": "src/index.js",
   "author": "Thomas Rueckstiess",
+  "homepage": "https://github.com/mongodb-labs/cubes",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mongodb-labs/cubes.git"
+  },
   "license": "MIT",
   "dependencies": {
     "lodash": "^4.17.21"
