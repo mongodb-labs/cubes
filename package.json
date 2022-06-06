@@ -1,6 +1,6 @@
 {
   "name": "mdb-cubes",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Basic OLAP Cubing for the MongoDB Aggregation Framework",
   "main": "src/index.js",
   "author": "Thomas Rueckstiess",
