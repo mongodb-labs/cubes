@@ -10,7 +10,7 @@ Note that this implementation is not officially endorsed or supported by MongoDB
 
 ## Installation
 
-Install the module in the local folder from where you will start the `mongosh` shell with npm:
+Install the npm module in the local folder from where you will start the `mongosh` shell:
 
 ```
 npm install mdb-cubes
