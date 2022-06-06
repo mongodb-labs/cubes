@@ -1,5 +1,5 @@
 {
-  "name": "cubes",
+  "name": "mdb-cubes",
   "version": "0.1.0",
   "description": "Basic OLAP Cubing for the MongoDB Aggregation Framework",
   "main": "src/index.js",

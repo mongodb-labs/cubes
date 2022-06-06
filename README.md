@@ -1,6 +1,6 @@
 # OLAP Cubing for MongoDB
 
-This repository demonstrates the basic idea of creating and querying OLAP Cubes using the MongoDB Aggregation Framework. It accompanies the talk I presented at MongoDB World 2022 "Materialized Pre-Aggregations for Exploratory Analytics Queries".
+This repository demonstrates the basic idea of creating and querying OLAP Cubes using the MongoDB Aggregation Framework. It accompanies the talk I presented at MongoDB World 2022 [Materialized Pre-Aggregations for Exploratory Analytics Queries](https://app.swapcard.com/widget/event/mongodb-world-2022/planning/UGxhbm5pbmdfODYxNzE2).
 
 An OLAP Cube can be seen as a pre-aggregated view of a dataset along certain dimensions of interest. The data is processed in a way that allows for fast ad-hoc analytics queries over the chosen dimensions for the purpose of data exploration or visualisation.
 
@@ -13,10 +13,10 @@ Note that this implementation is not officially endorsed or supported by MongoDB
 Install the module in the local folder from where you will start the `mongosh` shell with npm:
 
 ```
-npm install cubes
+npm install mdb-cubes
 ```
 
-You will need a mongod server running locally. Here we assume the standard port 27017. Launch the (new) mongo shell with:
+You will need a mongod server running locally. Here we assume the standard port 27017. Launch the (new) [mongo shell](https://www.mongodb.com/docs/mongodb-shell/) with:
 
 ```
 mongosh
@@ -25,12 +25,12 @@ mongosh
 Now import the module by typing:
 
 ```js
-const cubes = require("cubes");
+const cubes = require("mdb-cubes");
 ```
 
 ## API
 
-The `cubes` module provides 2 functions: `createCube()` to create a materialized view and `queryCube()` to query the view.
+The `mdb-cubes` module provides 2 functions: `createCube()` to create a materialized view and `queryCube()` to query the view.
 
 ### cubes.createCube(dimensions, measures, viewName)
 
@@ -59,10 +59,10 @@ db.cube.aggregate(cubes.queryCube(p));
 
 ### DMV Dataset
 
-The examples below use the DMV dataset. To follow along with the examples, you can download the DMV dataset here. Load the dataset into the `datasets.dmv` namespace on your local mongod server with:
+The examples below use the DMV dataset. To follow along with the examples, you can [download the DMV dataset here](https://drive.google.com/uc?export=download&id=1KrOJSMeNStayubP_n-fpURzYCLhtlWvB). Unzip the archive and import the json dataset into the `datasets.dmv` namespace on your local mongod server with:
 
 ```
-mongorestore -d datasets -c dmv dump/datasets/dmv.bson
+mongoimport -d datasets -c dmv dmv.json
 ```
 
 ### Creating a Cube
@@ -167,7 +167,7 @@ This pipeline would work against the original dataset, but when issued against t
 ];
 ```
 
-Instead of adding 1 for each document, it sums up the `counts`. It also added a `$project` stage. In this simple example, the additional `$project` stage is a no-op, but for more complex aggregations (like the one below), it cleans up the result and ensures that the result looks exactly like the one of the original pipeline.
+Instead of adding 1 for each document, it sums up the `count` fields. It also added a `$project` stage. In this simple example, the additional `$project` stage is a no-op, but for more complex aggregations (like the one below), it cleans up the result and ensures that the result looks exactly like the one of the original pipeline.
 
 Now we can compare the results querying the collection vs. querying the cube:
 
@@ -182,6 +182,8 @@ datasets> db.dmv.cube.aggregate(cubes.queryCube(p1))
 ```
 
 The only difference is performance. The second operation runs orders of magnitudes faster than the first.
+
+---
 
 Now we use a more complex aggregation: We want to determine the average weight of vehicles for each year, and retrieve the top 3 years with heaviest vehicles on average:
 
