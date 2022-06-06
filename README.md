@@ -10,13 +10,15 @@ Note that this implementation is not officially endorsed or supported by MongoDB
 
 ## Installation
 
+We are going to use this package directly in the (new) [mongo shell](https://www.mongodb.com/docs/mongodb-shell/). You will need a mongod server running locally. Here we assume the standard port 27017. 
+
 Install the npm module in the local folder from where you will start the `mongosh` shell:
 
 ```
 npm install mdb-cubes
 ```
 
-You will need a mongod server running locally. Here we assume the standard port 27017. Launch the (new) [mongo shell](https://www.mongodb.com/docs/mongodb-shell/) with:
+Launch the mongo shell with:
 
 ```
 mongosh
@@ -25,7 +27,7 @@ mongosh
 Now import the module by typing:
 
 ```js
-const cubes = require("mdb-cubes");
+const cubes = require("mdb-cubes")
 ```
 
 ## API
@@ -52,7 +54,7 @@ This implemention currently only supports pipelines that start with a `$group` s
 
 ```js
 // assuming original pipeline "p" and view name "cube"
-db.cube.aggregate(cubes.queryCube(p));
+db.cube.aggregate( cubes.queryCube(p) )
 ```
 
 ## Example
@@ -76,7 +78,7 @@ const cubePipeline = cubes.createCube(
   ["State", "Color", "Suspension Indicator", "Model Year"],
   ["Unladen Weight"],
   "dmv.cube"
-);
+)
 ```
 
 For our example, the `createCube()` function returns the following aggregation pipeline:
@@ -127,13 +129,13 @@ Averages are also supported, but are computed when querying the cube using sums 
 Now we need to execute the cube pipeline against the original dataset. The results will be stored in the `dmv.cube` collection. This step can take several minutes.
 
 ```js
-db.dmv.aggregate(cubePipeline);
+db.dmv.aggregate(cubePipeline)
 ```
 
 You can verify that the cube was created by inspecting the materialized view:
 
 ```js
-db.dmv.cube.findOne();
+db.dmv.cube.findOne()
 ```
 
 This will return a document similar to the one below:
@@ -155,7 +157,7 @@ This will return a document similar to the one below:
 As a first example, we want to retrieve the total document count, which can be expressed as a `$group` operation over a constant dimension (we can use `null` for the `_id` field):
 
 ```js
-const p1 = [{ $group: { _id: null, count: { $sum: 1 } } }];
+const p1 = [{ $group: { _id: null, count: { $sum: 1 } } }]
 ```
 
 This pipeline would work against the original dataset, but when issued against the materialized view, it needs to be modified. We can inspect the result of `cubes.queryCube(p1)` to see the rewritten pipeline:
@@ -164,7 +166,7 @@ This pipeline would work against the original dataset, but when issued against t
 [
   { $group: { _id: null, count: { $sum: "$count" } } },
   { $project: { _id: 1, count: "$count" } },
-];
+]
 ```
 
 Instead of adding 1 for each document, it sums up the `count` fields. It also added a `$project` stage. In this simple example, the additional `$project` stage is a no-op, but for more complex aggregations (like the one below), it cleans up the result and ensures that the result looks exactly like the one of the original pipeline.
@@ -201,7 +203,7 @@ const p2 = [
   },
   { $sort: { avg_weight: -1 } },
   { $limit: 3 },
-];
+]
 ```
 
 To see the rewritten pipeline, again we can inspect the result of `cubes.queryCube(p2)`, which is:
@@ -231,7 +233,7 @@ To see the rewritten pipeline, again we can inspect the result of `cubes.queryCu
   { $project: { _id: 1, avg_weight: "$Unladen Weight_avg" } },
   { $sort: { avg_weight: -1 } },
   { $limit: 3 },
-];
+]
 ```
 
 This pipeline looks more complex than the original pipeline, because it had to calculate the average explicitly from the sum
