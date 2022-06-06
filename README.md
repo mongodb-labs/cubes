@@ -119,7 +119,7 @@ For our example, the `createCube()` function returns the following aggregation p
     },
   },
   { $out: "dmv.cube" },
-];
+]
 ```
 
 Note that for each provided measure field, the `sum`, `min`, `max` and `count` aggregates are calculated. In addition, the overall count of documents is also calculated.
